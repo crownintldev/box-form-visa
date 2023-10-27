@@ -40,7 +40,8 @@ const Box = ({ b }: { b: number }) => {
           key={index}
           // @ts-ignore
           ref={(el) => (inputRefs.current[index] = el)}
-          className='text-center border border-gray-800 d-block w-3 h-3 p-[1px]  '
+          className='text-center border font-medium border-gray-800 d-block w-[16px] h-[16px] ' 
+          style={{fontSize:"15px"}}
           type="text"
           onKeyDown={(e) => handleKeyDown(e, index)} // Handle Backspace and focus change
           onChange={(e) => handleInputChange(e, index)} // Automatically move to the next input on input

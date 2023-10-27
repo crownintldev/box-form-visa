@@ -80,7 +80,7 @@ const Form = () => {
   // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   // depends styles
   const Title = ({ children }: { children: React.ReactNode }) => (
-    <div className="w-4/12">
+    <div className="w-4/12 mt-[2px]">
       <p>
         {children}
       </p>
@@ -108,13 +108,14 @@ const Form = () => {
   )
   const Layout = ({ children }: { children: React.ReactNode }) => (
     <div className='w-[595px] mx-auto space-y-2'>
-      <div className='w-[90%] mx-auto mt-10'>
+      <div className='w-[90%] mx-auto mt-8'>
         <Header />
       </div>
+      {/* line on header below */}
       <div className=' border border-gray-900 bg-gray-900 h-[1px] w-12/12 mx-auto'>
 
       </div>
-      <div className='w-[90%] mx-auto'>
+      <div className='ps-4 w-full overflow-hidden '>
         {children}
       </div>
     </div>
@@ -123,7 +124,8 @@ const Form = () => {
   return (
     <Layout>
       <div className='w-full flex space-x-4 relative'>
-        <div className='w-full space-y-1 leading-[1.1px]'>
+        {/* image at the next of this div, this is flex property */}
+        <div className='w-full space-y-1 leading-[1.1px] pe-[89px]'>
           {/*  */}
           <DashBoxes title='Date' item={[2, 2, 4]} />
           {/* */}
@@ -229,7 +231,7 @@ const Form = () => {
           />
           {/*  */}
           <MentionContainer
-            text='Sex'
+            text='Marital Status'
             item={["Married", "Single"]}
             space
           />
@@ -378,14 +380,21 @@ const Form = () => {
           <ContentOutline>
             <Title> If &quot;Yes&quot; give detail 2 previous posting </Title>
             <Boxes wf>
-              : &nbsp;
               <div className='space-y-1'>
 
-                <div className='flex space-y-0 p-0 m-0 '>
-                  1 &nbsp; <Box b={20} />
+                <div className='flex items-center space-x-3 space-y-0 p-0 m-0 '>
+                  <p>:</p>
+                  <div className='flex items-center space-x-1'>
+                    <p>1</p>
+                    <Box b={21} />
+                  </div>
                 </div>
-                <div className='flex'>
-                  2 &nbsp;<Box b={20} />
+                <div className='flex items-center space-x-3 space-y-0 p-0 m-0'>
+                  <p></p>
+                  <div className='flex items-center space-x-1'>
+                    <p>2</p>
+                    <Box b={21} />
+                  </div>
                 </div>
               </div>
             </Boxes>
@@ -408,20 +417,23 @@ const Form = () => {
               <br />
               prerequites checked administration at the airport remains the discreation of the Immigration authorities in Indonesia
             </p>
+            <div>
+              <span className='text-sm p-0 m-0'>
+                Applicant`s signature and name
+              </span>
+              <div className='flex space-x-4'>
+                <div className='w-1 h-1 border border-gray-500 px-28 py-8'></div>
+                <div className='flex mt-10 items-start'>
+                  <div className='flex space-x-1 items-center '>
+                    <Box b={2} />
+                    <p>-</p>
 
-            Applicant`s signature and name
-            <div className='flex space-x-4'>
-              <div className='w-1 h-1 border border-gray-500 px-36 py-16'></div>
-              <div className='flex mt-10 items-start'>
-                <div className='flex space-x-1 items-center '>
-                  <Box b={2} />
-                  <p>-</p>
-
-                  <Box b={2} />
-                  <p>-</p>
-                  <Box b={4} />
+                    <Box b={2} />
+                    <p>-</p>
+                    <Box b={4} />
+                  </div>
+                  <span className=' text-[10px] leading-[12px] ms-[1px]'>(DD-MM-YYYY)</span>
                 </div>
-                <span className=' text-[10px] leading-[12px] ms-[1px]'>(DD-MM-YYYY)</span>
               </div>
             </div>
             <p className='font-semibold text-[10px] leading-[12px]'>
@@ -431,7 +443,7 @@ const Form = () => {
 
 
         {/* +++++++++++++++++++++++++++++pic+++++++++++++++++++++++++++++++++++++++= */}
-        <div className='w-[92px] h-auto absolute right-0'>
+        <div className='w-28 h-auto absolute right-0'>
           <div className='p-4 h-28 border border-gray-800'></div>
         </div>
 

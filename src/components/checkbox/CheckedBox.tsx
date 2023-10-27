@@ -5,7 +5,7 @@ const CheckedBox = () => {
         <div>
             <input
                 type='checkbox'
-                className='text-center border border-gray-800 d-block w-3 h-3 p-[1px]'
+                className='text-center border border-gray-800 d-block w-[16px] h-[14px]'
             />
         </div>
     )
