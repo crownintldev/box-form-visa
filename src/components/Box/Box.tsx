@@ -6,46 +6,73 @@ const Box = ({ b }: { b: number }) => {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
     if (e.key === 'Backspace' && index > 0 && !inputRefs.current[index].value) {
-      // If Backspace is pressed and the current field is empty, move to the previous field and delete its content
       e.preventDefault();
       inputRefs.current[index - 1].focus();
       inputRefs.current[index - 1].value = '';
     }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    console.log(e.target.value)
-    const newValue = e.target.value.slice(0, 1);
-
-    // Update the value of the input field with the entered character
-    inputRefs.current[index].value = newValue;
-
-    if (newValue && index < inputRefs.current.length - 1) {
-      // Automatically move to the next input field if a value is entered
+    // Handle right arrow
+    if (e.key === 'ArrowRight' && index < b - 1) {
+      e.preventDefault();
       inputRefs.current[index + 1].focus();
     }
+
+    // Handle left arrow
+    if (e.key === 'ArrowLeft' && index > 0) {
+      e.preventDefault();
+      inputRefs.current[index - 1].focus();
+    }
+  };
+// @ts-ignore
+  const distributeCharacters = (characters, startIndex) => {
+    let nextIndex = startIndex;
+    for (let char of characters) {
+      if (nextIndex < inputRefs.current.length) {
+        inputRefs.current[nextIndex].value = char;
+        nextIndex++;
+      }
+    }
+    // Set focus to the next empty input if there is one
+    if (nextIndex < inputRefs.current.length) {
+      inputRefs.current[nextIndex].focus();
+    }
+  };
+
+  const handleInput = (e: React.FormEvent<HTMLInputElement>, index: number) => {
+    const inputChar = e.currentTarget.value;
+    if (inputChar.length === 1) {
+      // Handle single character input (typing)
+      if (index < inputRefs.current.length - 1) {
+        inputRefs.current[index + 1].focus();
+      }
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>, index: number) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData('text').slice(0, b - index);
+    distributeCharacters(pastedData, index);
   };
 
   useEffect(() => {
-    // Focus on the first input field when the component mounts
     if (inputRefs.current.length > 0) {
       inputRefs.current[0].focus();
     }
-  }, []);
+  }, [b]);
 
   return (
     <div className='flex'>
-      {(Array(b) as unknown[]).fill(null).map((_, index) => (
+      {Array.from({ length: b }, (_, index) => (
         <input
           key={index}
           // @ts-ignore
-          ref={(el) => (inputRefs.current[index] = el)}
-          className='text-center border font-medium border-gray-800 d-block w-[16px] h-[16px] ' 
-          style={{fontSize:"15px"}}
+          ref={(el) => inputRefs.current[index] = el}
+          className='text-center border font-medium border-gray-800 d-block w-[16px] h-[16px]'
+          style={{ fontSize: "15px" }}
           type="text"
-          onKeyDown={(e) => handleKeyDown(e, index)} // Handle Backspace and focus change
-          onChange={(e) => handleInputChange(e, index)} // Automatically move to the next input on input
-          maxLength={1} // Set the maximum length to 1 character
+          onKeyDown={(e) => handleKeyDown(e, index)}
+          onInput={(e) => handleInput(e, index)}
+          onPaste={(e) => handlePaste(e, index)}
+          maxLength={1}
         />
       ))}
     </div>

@@ -4,6 +4,7 @@ import Header from '../header/Header'
 import CheckedBox from '../checkbox/CheckedBox'
 
 const Form = () => {
+  // same page components start
   const Mention = ({ component, mention }: { component: any, mention: string }) => (
     <div className='flex'>
       <div className='flex space-x-1 '>
@@ -77,6 +78,8 @@ const Form = () => {
       </Boxes>
     </ContentOutline>
   )
+  // **--end same page components
+  
   // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   // depends styles
   const Title = ({ children }: { children: React.ReactNode }) => (
