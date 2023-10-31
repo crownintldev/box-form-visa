@@ -343,7 +343,7 @@ const Form = () => {
           <FullLineBox text='Country' />
           <DashBoxes wf title='Mobile/Phone Number' item={[3, 3, 9]} />
           {/* ********************Miscellaneous*************************************8 */}
-          <Heading><div className='ms-2'>V.</div> MISCELLANEOUS</Heading>
+          <Heading>V. MISCELLANEOUS</Heading>
           <MentionContainer text='Have you ever been to Indonesia before ?'
             item={["yes", "No"]}
           />
