@@ -18,8 +18,8 @@ const Form = () => {
       <Title>{text}</Title>
       <Boxes wf={wf}>
         <p>:</p>
-        <div className={`w-full`}>
-          <div className={`flex ${space ? "space-x-6" : "justify-between"} `}>
+        <div className={`w-full `}>
+          <div className={`flex ${space ? "space-x-4" : "justify-between"} `}>
             {item.map((item: any, i: any) => (
               <Mention key={i}
                 component={<CheckedBox />}
@@ -123,12 +123,12 @@ const Form = () => {
       </div>
     </div>
   )
-  // %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  // %%%%%%%%%%%%%%%%%main function%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   return (
     <Layout>
       <div className='w-full flex space-x-4 relative'>
         {/* image at the next of this div, this is flex property */}
-        <div className='w-full space-y-1 leading-[1.1px] pe-[89px]'>
+        <div className='w-full space-y-1 leading-[1.1px] me-[89px] '>
           {/*  */}
           <DashBoxes title='Date' item={[2, 2, 4]} />
           {/* */}
@@ -150,7 +150,7 @@ const Form = () => {
           {/* *********** */}
           <Heading>1. GENERAL</Heading>
           <ContentOutline>
-            <Title>Authorization Number</Title>
+            <Title>Length of Stay in Indonesia</Title>
             <Boxes>
               <p>:</p>
               <Mention
@@ -176,13 +176,14 @@ const Form = () => {
           {/*  */}
           <MentionContainer
             wf
-            text='Type of Visa'
-            item={["Posting", "Working", "Business", "Family", "Tourist"]}
+            space
+            text='Purpose of Visit'
+            item={["Posting", "Working", "Business", "Family", "Tourist", "Social"]}
           />
 
           <FullLineBox text='Point of Departure' />
           {/*  */}
-          <FullLineBox text='Point of Entry in Indonesia' />
+          <FullLineBox text='Port of Entry in Indonesia' />
           {/*  */}
           <FullLineBox text="Flight/Carrier Name and Number" />
 
@@ -247,13 +248,17 @@ const Form = () => {
           />
           {/*  */}
           <ContentOutline>
-            <Title>Nationality <br /> Address </Title>
+            <Title>
+              <div className='flex flex-col'>
+              Nationality 
+            <p className='pt-2'>Address</p>
+            </div> </Title>
             <Boxes wf>
-              <p>:</p>
+              {/* <p>:</p> */}
               <div className='space-y-1'>
-                <Box b={22} />
-                <Box b={22} />
-                <Box b={22} />
+                <span className='flex '>: &nbsp;&nbsp;<Box b={22} /></span>
+                <span className='flex '>&nbsp; &nbsp;&nbsp;<Box b={22} /></span>
+                <span className='flex '>&nbsp; &nbsp;&nbsp;<Box b={22} /></span>
               </div>
             </Boxes>
           </ContentOutline>
@@ -277,7 +282,7 @@ const Form = () => {
           </div>
           {/*  */}
           <FullLineBox text='Occupation' />
-          <FullLineBox text='Current Position/Desination' />
+          <FullLineBox text='Current Position/Designation' />
           <FullLineBox text='Name of Institution/Company' />
           {/*  */}
           <ContentOutline>
@@ -296,11 +301,11 @@ const Form = () => {
           {/*  */}
           <DashBoxes wf item={[3, 3, 9]} title='Phone Number' />
           {/* **********Passport  Information*************** */}
-          <Heading>IV. Passport Information</Heading>
+          <Heading>III. Passport Information</Heading>
           <MentionContainer
             wf
             text="Type of Visa"
-            item={["", "Diplomatic Service", "UNLP", "Ordinary"]}
+            item={["Diplomatic", "Service", "UNLP", "Ordinary"]}
           />
           <FullLineBox text='Passport Number' />
           <FullLineBox text='Place of Issue' />
@@ -308,7 +313,7 @@ const Form = () => {
           <MentionDashBoxes item={[2, 3, 4]} title='Date of Expiry' />
 
           {/* **********Sponsorship Information*************** */}
-          <Heading>V. Sponsorship Information</Heading>
+          <Heading>IV. Sponsorship Information</Heading>
           <>
             <MentionContainer
               wf
@@ -321,11 +326,11 @@ const Form = () => {
               item={["Institutions", "International Organization", "NGO"]}
             />
           </>
-          <FullLineBox text='Number of Individual' />
+          <FullLineBox text='Name of Individual' />
           <FullLineBox text='Current Position' />
-          <FullLineBox text={`Number of Institution/Company/Hotel/International Organization/NGO`} />
+          <FullLineBox text={`Name of Institution/Company/Hotel/International Organization/NGO`} />
           <ContentOutline>
-            <Title>Nationality <br /> Address </Title>
+            <Title>Address </Title>
             <Boxes wf>
               <p>:</p>
               <div className='space-y-1'>
@@ -338,6 +343,7 @@ const Form = () => {
           <FullLineBox text='Country' />
           <DashBoxes wf title='Mobile/Phone Number' item={[3, 3, 9]} />
           {/* ********************Miscellaneous*************************************8 */}
+          <Heading>V. MISCELLANEOUS</Heading>
           <MentionContainer text='Have you ever been to Indonesia before ?'
             item={["yes", "No"]}
           />
