@@ -1,3 +1,4 @@
+
 import React from 'react'
 import Box from '../Box/Box'
 import Header from '../header/Header'
@@ -84,9 +85,9 @@ const Form = () => {
   // depends styles
   const Title = ({ children }: { children: React.ReactNode }) => (
     <div className="w-4/12 mt-[2px]">
-      <p>
+      <div>
         {children}
-      </p>
+      </div>
     </div>
   )
   const Heading = ({ children }: { children: React.ReactNode }) => (
