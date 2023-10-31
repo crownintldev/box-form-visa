@@ -1,4 +1,5 @@
-
+//31oct: 
+// remove p title and replace with div
 import React from 'react'
 import Box from '../Box/Box'
 import Header from '../header/Header'
@@ -91,7 +92,7 @@ const Form = () => {
     </div>
   )
   const Heading = ({ children }: { children: React.ReactNode }) => (
-    <h4 className=' font-bold uppercase text-xs'>{children}</h4>
+    <h4 className='-ms-2 font-bold uppercase text-xs'>{children}</h4>
   )
   const Boxes = ({ children, wf }: { children: React.ReactNode, wf?: boolean }) => (
     //  320+128 = 328 
