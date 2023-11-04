@@ -47,41 +47,23 @@ const Box = ({ b }: { b: number }) => {
   }, []);
 
 
-  // const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
-  //   if (e.key === 'Backspace') {
-  //     e.preventDefault();
-  
-  //     if (selectionStart !== null && selectionEnd !== null) {
-  //       const start = Math.min(selectionStart, selectionEnd);
-  //       const end = Math.max(selectionStart, selectionEnd);
-  
-  //       // Remove the selected range and capture the values after the selection.
-  //       const valuesAfterSelection = inputRefs.current
-  //         .slice(end + 1)
-  //         .map(ref => ref.value);
-  
-  //       // Clear all inputs from the start of the selection onwards.
-  //       for (let i = start; i < inputRefs.current.length; i++) {
-  //         inputRefs.current[i].value = '';
-  //       }
-  
-  //       // Merge the values after the selection into the cleared inputs.
-  //       for (let i = 0; i < valuesAfterSelection.length; i++) {
-  //         inputRefs.current[start + i].value = valuesAfterSelection[i];
-  //       }
-  
-  //       setSelectionStart(null);
-  //       setSelectionEnd(null);
-  
-  //       // Focus the input at the start of the previous selection.
-  //       inputRefs.current[start].focus();
-  //     } else if (index > 0 && !inputRefs.current[index].value) {
-  //       // Handle case for single backspace with no selection
-  //       inputRefs.current[index - 1].value = '';
-  //       inputRefs.current[index - 1].focus();
-  //     }
-  //   }
-  
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+    if (e.key === 'Backspace' && selectionStart !== null && selectionEnd !== null && selectionStart !== selectionEnd) {
+      e.preventDefault();
+      const start = Math.min(selectionStart, selectionEnd);
+      const end = Math.max(selectionStart, selectionEnd);
+      for (let i = start; i <= end; i++) {
+        inputRefs.current[i].value = '';
+      }
+      setSelectionStart(null);
+      setSelectionEnd(null);
+      inputRefs.current[start].focus();
+    } else if (e.key === 'Backspace' && index > 0 && !inputRefs.current[index].value) {
+      e.preventDefault();
+      inputRefs.current[index - 1].focus();
+      inputRefs.current[index - 1].value = '';
+    }
+
     // Handle right arrow
     if (e.key === 'ArrowRight' && index < b - 1) {
       e.preventDefault();
