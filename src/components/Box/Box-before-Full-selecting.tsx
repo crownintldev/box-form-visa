@@ -1,5 +1,4 @@
 "use client"
-//Working --Box-before-Full-selecting
 import React, { useRef, useState, useEffect } from 'react';
 
 const Box = ({ b }: { b: number }) => {
@@ -48,54 +47,40 @@ const Box = ({ b }: { b: number }) => {
   }, []);
 
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+  // const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+  //   if (e.key === 'Backspace') {
+  //     e.preventDefault();
   
-    if (e.key === 'Backspace') {
-      e.preventDefault();
+  //     if (selectionStart !== null && selectionEnd !== null) {
+  //       const start = Math.min(selectionStart, selectionEnd);
+  //       const end = Math.max(selectionStart, selectionEnd);
   
-      if (selectionStart !== null && selectionEnd !== null && selectionStart !== selectionEnd) {
-        // Range deletion
-        const start = Math.min(selectionStart, selectionEnd);
-        const end = Math.max(selectionStart, selectionEnd);
+  //       // Remove the selected range and capture the values after the selection.
+  //       const valuesAfterSelection = inputRefs.current
+  //         .slice(end + 1)
+  //         .map(ref => ref.value);
   
-        // Clear the range
-        for (let i = start; i <= end; i++) {
-          inputRefs.current[i].value = '';
-        }
+  //       // Clear all inputs from the start of the selection onwards.
+  //       for (let i = start; i < inputRefs.current.length; i++) {
+  //         inputRefs.current[i].value = '';
+  //       }
   
-        // Shift the characters after the range to the left
-        const valuesAfterEnd = inputRefs.current.slice(end + 1).map(ref => ref.value);
-        for (let i = 0; i < valuesAfterEnd.length; i++) {
-          inputRefs.current[start + i].value = valuesAfterEnd[i];
-          if (i < valuesAfterEnd.length) {
-            inputRefs.current[start + i + 1].value = '';
-          }
-        }
+  //       // Merge the values after the selection into the cleared inputs.
+  //       for (let i = 0; i < valuesAfterSelection.length; i++) {
+  //         inputRefs.current[start + i].value = valuesAfterSelection[i];
+  //       }
   
-        // Set focus to the start of the deleted range
-        inputRefs.current[start].focus();
+  //       setSelectionStart(null);
+  //       setSelectionEnd(null);
   
-        // Reset selection state
-        setSelectionStart(null);
-        setSelectionEnd(null);
-      } else {
-        // Single character deletion
-        if (index > 0 || inputRefs.current[index].value) {
-          // Shift characters to the left from the current index
-          for (let i = index; i < inputRefs.current.length - 1; i++) {
-            inputRefs.current[i].value = inputRefs.current[i + 1].value;
-          }
-  
-          // Clear the last input
-          if (inputRefs.current[inputRefs.current.length - 1]) {
-            inputRefs.current[inputRefs.current.length - 1].value = '';
-          }
-  
-          // Focus the correct input
-          inputRefs.current[Math.max(0, index - 1)].focus();
-        }
-      }
-    }
+  //       // Focus the input at the start of the previous selection.
+  //       inputRefs.current[start].focus();
+  //     } else if (index > 0 && !inputRefs.current[index].value) {
+  //       // Handle case for single backspace with no selection
+  //       inputRefs.current[index - 1].value = '';
+  //       inputRefs.current[index - 1].focus();
+  //     }
+  //   }
   
     // Handle right arrow
     if (e.key === 'ArrowRight' && index < b - 1) {

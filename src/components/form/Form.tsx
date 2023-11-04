@@ -1,6 +1,5 @@
-//31oct: 
-// remove p title and replace with div
-import React from 'react'
+"use client"
+import React,{useState} from 'react'
 import Box from '../Box/Box'
 import Header from '../header/Header'
 import CheckedBox from '../checkbox/CheckedBox'
