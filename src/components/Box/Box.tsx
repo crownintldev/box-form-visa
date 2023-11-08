@@ -8,6 +8,7 @@ const Box = ({ b }: { b: number }) => {
   const [selectionEnd, setSelectionEnd] = useState<number | null>(null);
   const isSelecting = useRef(false);
 
+
   const handleMouseDown = (index: number) => {
     setSelectionStart(index);
     setSelectionEnd(index);
@@ -24,24 +25,24 @@ const Box = ({ b }: { b: number }) => {
     const handleGlobalMouseUp = () => {
       isSelecting.current = false;
     };
-  
+
     window.addEventListener('mouseup', handleGlobalMouseUp);
-    
+
     return () => {
       window.removeEventListener('mouseup', handleGlobalMouseUp);
     };
   }, []);
 
   useEffect(() => {
-    const handleClickOutside = (event:any) => {
+    const handleClickOutside = (event: any) => {
       if (!inputRefs.current.some(ref => ref && ref.contains(event.target))) {
         setSelectionStart(null);
         setSelectionEnd(null);
       }
     };
-  
+
     document.addEventListener('mousedown', handleClickOutside);
-  
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -49,20 +50,20 @@ const Box = ({ b }: { b: number }) => {
 
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
-  
+
     if (e.key === 'Backspace') {
       e.preventDefault();
-  
+
       if (selectionStart !== null && selectionEnd !== null && selectionStart !== selectionEnd) {
         // Range deletion
         const start = Math.min(selectionStart, selectionEnd);
         const end = Math.max(selectionStart, selectionEnd);
-  
+
         // Clear the range
         for (let i = start; i <= end; i++) {
           inputRefs.current[i].value = '';
         }
-  
+
         // Shift the characters after the range to the left
         const valuesAfterEnd = inputRefs.current.slice(end + 1).map(ref => ref.value);
         for (let i = 0; i < valuesAfterEnd.length; i++) {
@@ -71,10 +72,10 @@ const Box = ({ b }: { b: number }) => {
             inputRefs.current[start + i + 1].value = '';
           }
         }
-  
+
         // Set focus to the start of the deleted range
         inputRefs.current[start].focus();
-  
+
         // Reset selection state
         setSelectionStart(null);
         setSelectionEnd(null);
@@ -85,18 +86,18 @@ const Box = ({ b }: { b: number }) => {
           for (let i = index; i < inputRefs.current.length - 1; i++) {
             inputRefs.current[i].value = inputRefs.current[i + 1].value;
           }
-  
+
           // Clear the last input
           if (inputRefs.current[inputRefs.current.length - 1]) {
             inputRefs.current[inputRefs.current.length - 1].value = '';
           }
-  
+
           // Focus the correct input
           inputRefs.current[Math.max(0, index - 1)].focus();
         }
       }
     }
-  
+
     // Handle right arrow
     if (e.key === 'ArrowRight' && index < b - 1) {
       e.preventDefault();
@@ -133,43 +134,46 @@ const Box = ({ b }: { b: number }) => {
       }
     }
   };
+  
 
 
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>, index: number) => {
-  e.preventDefault();
-  const pastedData = e.clipboardData.getData('text').split(''); // split pasted data into characters
-
-  if (selectionStart !== null && selectionEnd !== null) {
-    // Clear the selected inputs first
-    const start = Math.min(selectionStart, selectionEnd);
-    const end = Math.max(selectionStart, selectionEnd);
-    for (let i = start; i <= end; i++) {
-      if (inputRefs.current[i]) {
-        inputRefs.current[i].value = '';
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData('text');
+    const startIdx = index;
+    const endIdx = Math.min(startIdx + pastedData.length - 1, b - 1);
+    const selectionLength = endIdx - startIdx + 1;
+  
+    // Calculate how many characters will be replaced and how many will be shifted to the right
+    const replaceCount = Math.min(selectionLength, pastedData.length);
+    const shiftCount = selectionLength - replaceCount;
+  
+    // Replace the selected text with the pasted characters
+    for (let i = 0; i < replaceCount; i++) {
+      inputRefs.current[startIdx + i].value = pastedData[i];
+    }
+  
+    // Shift the remaining characters to the right after the pasted text, if necessary
+    if (shiftCount > 0) {
+      for (let i = b - shiftCount - 1; i >= endIdx + 1; i--) {
+        inputRefs.current[i + shiftCount].value = inputRefs.current[i].value;
       }
     }
-    
-    // Replace selection with pasted data
-    for (let i = 0; i < pastedData.length && (start + i) <= end; i++) {
-      if (inputRefs.current[start + i]) {
-        inputRefs.current[start + i].value = pastedData[i];
+  
+    // If pasted data is longer than the selection, fill in the additional characters
+    for (let i = replaceCount; i < pastedData.length; i++) {
+      if (startIdx + i < b) {
+        inputRefs.current[startIdx + i].value = pastedData[i];
       }
     }
-    
-    // Focus the next input after the paste if it exists
-    const nextIndex = start + pastedData.length;
-    if (nextIndex < b) {
+  
+    // Set focus to the next empty input if there is one
+    const nextIndex = startIdx + replaceCount;
+    if (nextIndex < inputRefs.current.length) {
       inputRefs.current[nextIndex].focus();
     }
-  } else {
-    // If there is no selection, proceed as before
-    distributeCharacters(pastedData, index);
-  }
-  
-  // Reset selection state
-  setSelectionStart(null);
-  setSelectionEnd(null);
-};
+  };
+
 
   useEffect(() => {
     if (inputRefs.current.length > 0) {
@@ -182,10 +186,10 @@ const Box = ({ b }: { b: number }) => {
     // Convert to non-null values for comparison
     let start = selectionStart ?? -1;
     let end = selectionEnd ?? -1;
-  
+
     // If selectionStart or selectionEnd is null, no selection is made
     if (start === -1 || end === -1) return false;
-  
+
     if (start > end) [start, end] = [end, start]; // Swap if start is greater than end
     return index >= start && index <= end;
   };
