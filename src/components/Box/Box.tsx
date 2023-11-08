@@ -127,53 +127,86 @@ const Box = ({ b }: { b: number }) => {
 
   const handleInput = (e: React.FormEvent<HTMLInputElement>, index: number) => {
     const inputChar = e.currentTarget.value;
-    if (inputChar.length === 1) {
-      // Handle single character input (typing)
-      if (index < inputRefs.current.length - 1) {
-        inputRefs.current[index + 1].focus();
+  
+    if (selectionStart !== null && selectionEnd !== null) {
+      // Clear the selection range
+      const start = Math.min(selectionStart, selectionEnd);
+      const end = Math.max(selectionStart, selectionEnd);
+      for (let i = start; i <= end; i++) {
+        inputRefs.current[i].value = '';
       }
+      
+      // Shift the characters after the selection end to the right by one position to make space
+      for (let i = b - 1; i > end; i--) {
+        inputRefs.current[i].value = inputRefs.current[i - 1].value;
+      }
+  
+      // Insert the typed character at the start of the selection
+      inputRefs.current[start].value = inputChar;
+      
+      // Reset the selection range
+      setSelectionStart(null);
+      setSelectionEnd(null);
+      
+      // Set the focus to the next input after the typed character
+      if (start + 1 < b) {
+        inputRefs.current[start + 1].focus();
+      }
+    } else if (inputChar.length === 1 && index < b - 1) {
+      // If there's no selection and a single character was input, simply move to the next input
+      inputRefs.current[index + 1].focus();
     }
   };
   
-
 
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>, index: number) => {
     e.preventDefault();
-    const pastedData = e.clipboardData.getData('text');
-    const startIdx = index;
-    const endIdx = Math.min(startIdx + pastedData.length - 1, b - 1);
-    const selectionLength = endIdx - startIdx + 1;
+    // Get the pasted text
+    const pastedText = e.clipboardData.getData('text');
+    const pastedData = pastedText.split('');
   
-    // Calculate how many characters will be replaced and how many will be shifted to the right
-    const replaceCount = Math.min(selectionLength, pastedData.length);
-    const shiftCount = selectionLength - replaceCount;
+    // Determine the range for selection or cursor position for a single character
+    const startIdx = selectionStart !== null ? Math.min(selectionStart, selectionEnd) : index;
+    const endIdx = selectionEnd !== null ? selectionEnd : startIdx;
   
-    // Replace the selected text with the pasted characters
-    for (let i = 0; i < replaceCount; i++) {
-      inputRefs.current[startIdx + i].value = pastedData[i];
-    }
+    // Calculate the end index after pasting
+    const endPasteIdx = startIdx + pastedData.length;
   
-    // Shift the remaining characters to the right after the pasted text, if necessary
-    if (shiftCount > 0) {
-      for (let i = b - shiftCount - 1; i >= endIdx + 1; i--) {
-        inputRefs.current[i + shiftCount].value = inputRefs.current[i].value;
+    // Prepare an array to hold the new sequence of characters
+    let newValues = Array.from({ length: b }, (_, i) => {
+      // If the index is before the start of the paste, keep the current value
+      if (i < startIdx) {
+        return inputRefs.current[i].value;
       }
-    }
-  
-    // If pasted data is longer than the selection, fill in the additional characters
-    for (let i = replaceCount; i < pastedData.length; i++) {
-      if (startIdx + i < b) {
-        inputRefs.current[startIdx + i].value = pastedData[i];
+      // If the index is within the range of the pasted text, use the pasted characters
+      if (i >= startIdx && i < endPasteIdx) {
+        return pastedData[i - startIdx];
       }
-    }
+      // If the index is after the pasted text, shift the existing characters after the pasted text
+      if (i >= endPasteIdx) {
+        const shiftIndex = i - pastedData.length + (endIdx - startIdx + 1);
+        return shiftIndex < b ? inputRefs.current[shiftIndex].value : '';
+      }
+      return ''; // Default case to satisfy TypeScript
+    });
   
-    // Set focus to the next empty input if there is one
-    const nextIndex = startIdx + replaceCount;
-    if (nextIndex < inputRefs.current.length) {
+    // Set the new values to the inputs
+    newValues.forEach((val, i) => {
+      inputRefs.current[i].value = val;
+    });
+  
+    // Focus the next input after the pasted text
+    const nextIndex = Math.min(endPasteIdx, b - 1);
+    if (inputRefs.current[nextIndex]) {
       inputRefs.current[nextIndex].focus();
     }
+  
+    // Reset selection state
+    setSelectionStart(null);
+    setSelectionEnd(null);
   };
-
+  
+  
 
   useEffect(() => {
     if (inputRefs.current.length > 0) {
