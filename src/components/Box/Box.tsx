@@ -166,6 +166,7 @@ const Box = ({ b }: { b: number }) => {
     const pastedData = pastedText.split('');
   
     // Determine the range for selection or cursor position for a single character
+    // @ts-ignore
     const startIdx = selectionStart !== null ? Math.min(selectionStart, selectionEnd) : index;
     const endIdx = selectionEnd !== null ? selectionEnd : startIdx;
   
