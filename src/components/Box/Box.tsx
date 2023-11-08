@@ -108,10 +108,6 @@ const Box = ({ b }: { b: number }) => {
       e.preventDefault();
       inputRefs.current[index - 1].focus();
     }
-    if (e.key === 'Tab' && index === b - 1) {
-      e.preventDefault(); // prevent default behavior
-      props.moveToNextField(); // This is a placeholder for whatever implementation you choose
-    }
   };
   // @ts-ignore
   const distributeCharacters = (characters, startIndex) => {
