@@ -110,6 +110,7 @@ const Box = ({ b }: { b: number }) => {
     }
     if (e.key === 'Tab' && index === b - 1) {
       e.preventDefault(); // prevent default behavior
+    //@ts-ignore
       props.moveToNextField(); // This is a placeholder for whatever implementation you choose
     }
   };
@@ -138,42 +139,11 @@ const Box = ({ b }: { b: number }) => {
     }
   };
 
-
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>, index: number) => {
-  e.preventDefault();
-  const pastedData = e.clipboardData.getData('text').split(''); // split pasted data into characters
-
-  if (selectionStart !== null && selectionEnd !== null) {
-    // Clear the selected inputs first
-    const start = Math.min(selectionStart, selectionEnd);
-    const end = Math.max(selectionStart, selectionEnd);
-    for (let i = start; i <= end; i++) {
-      if (inputRefs.current[i]) {
-        inputRefs.current[i].value = '';
-      }
-    }
-    
-    // Replace selection with pasted data
-    for (let i = 0; i < pastedData.length && (start + i) <= end; i++) {
-      if (inputRefs.current[start + i]) {
-        inputRefs.current[start + i].value = pastedData[i];
-      }
-    }
-    
-    // Focus the next input after the paste if it exists
-    const nextIndex = start + pastedData.length;
-    if (nextIndex < b) {
-      inputRefs.current[nextIndex].focus();
-    }
-  } else {
-    // If there is no selection, proceed as before
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData('text').slice(0, b - index);
     distributeCharacters(pastedData, index);
-  }
-  
-  // Reset selection state
-  setSelectionStart(null);
-  setSelectionEnd(null);
-};
+  };
 
   useEffect(() => {
     if (inputRefs.current.length > 0) {
